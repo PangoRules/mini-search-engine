@@ -1,5 +1,6 @@
 import sqlite3
 from mini_search.models import Document
+from mini_search.storage.connection import get_connection
 
 
 def create_documents_table(conn: sqlite3.Connection) -> None:
@@ -50,9 +51,36 @@ def fetch_all_documents(conn: sqlite3.Connection) -> list[Document]:
                           """)
     rawDocs = cursor.fetchall()
 
-    def mapRawResult(rawDoc):
-        return Document(
-            rawDoc["path"], rawDoc["title"], rawDoc["content"], rawDoc["id"]
-        )
+    return list(map(mapRawResult, rawDocs))
+
+
+def fetch_documents_by_id(
+    conn: sqlite3.Connection, docIds: list[int]
+) -> list[Document]:
+    placeholder = ", ".join("?" for _ in docIds)
+
+    cursor = conn.execute(
+        f"""
+        SELECT id, path, title, content
+        FROM documents
+        WHERE id IN ({placeholder})
+    """,
+        docIds,
+    )
+
+    rawDocs = cursor.fetchall()
 
     return list(map(mapRawResult, rawDocs))
+
+
+def mapRawResult(rawDoc):
+    return Document(rawDoc["path"], rawDoc["title"], rawDoc["content"], rawDoc["id"])
+
+
+def main():
+    with get_connection() as conn:
+        print(fetch_documents_by_id(conn, [1, 2]))
+
+
+if __name__ == "__main__":
+    main()

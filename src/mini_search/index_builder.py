@@ -1,22 +1,23 @@
 from collections import defaultdict
 from mini_search.models import Document
 from mini_search.storage.connection import get_connection
-from mini_search.storage.documents import fetch_all_documents
 from mini_search.storage.document_tokens import insert_idx_entries
+from mini_search.storage.documents import fetch_all_documents
 from mini_search.tokenizer import tokenize
+from collections import Counter
 
 
 def build_inverted_index(documents: list[Document]):
-    invertedIndex: dict[str, set[int]] = defaultdict(set)
+    invertedIndex: dict[str, dict[int, int]] = defaultdict(dict)
 
     for document in documents:
         if document.id is None:
             continue
         tokens = tokenize(document.content)
+        c = Counter(tokens)
         for token in tokens:
-            invertedIndex[token].add(document.id)
+            invertedIndex[token][document.id] = c[token]
 
-    print(invertedIndex)
     return invertedIndex
 
 

@@ -8,6 +8,7 @@ def create_document_tokens_table(conn: sqlite3.Connection) -> None:
      CREATE TABLE IF NOT EXISTS document_tokens (
           doc_id INTEGER NOT NULL,
           token TEXT NOT NULL,
+          frequency INTEGER NOT NULL,
           UNIQUE(doc_id,token)
          )
      """)
@@ -15,17 +16,17 @@ def create_document_tokens_table(conn: sqlite3.Connection) -> None:
 
 
 def insert_idx_entries(
-    conn: sqlite3.Connection, tokenDict: dict[str, set[int]]
+    conn: sqlite3.Connection, tokenDict: dict[str, dict[int, int]]
 ) -> None:
     rows = []
-    for token, doc_ids in tokenDict.items():
-        for doc_id in doc_ids:
-            rows.append((doc_id, token))
+    for token, docs in tokenDict.items():
+        for doc, freq in docs.items():
+            rows.append((doc, token, freq))
     try:
         conn.executemany(
             """
-            INSERT INTO document_tokens (doc_id, token)
-            VALUES (?, ?)
+            INSERT INTO document_tokens (doc_id, token, frequency)
+            VALUES (?, ?, ?)
         """,
             rows,
         )
@@ -34,25 +35,29 @@ def insert_idx_entries(
         print("Some of the relations already exist.")
 
 
-def fetch_idx_entries(conn: sqlite3.Connection, token: str) -> list[int]:
+def fetch_idx_entries(conn: sqlite3.Connection, tokens: list[str]) -> dict[int, int]:
+    placeholders = ", ".join("?" for _ in tokens)
     cursor = conn.execute(
-        """
-            SELECT doc_id, token
+        f"""
+            SELECT doc_id, token, frequency
             FROM document_tokens
-            WHERE token=?
+            WHERE token IN ({placeholders})
         """,
-        (token,),
+        tokens,
     )
     rawResults = cursor.fetchall()
 
-    results = [rawResult["doc_id"] for rawResult in rawResults]
+    results = {}
+    for row in rawResults:
+        doc_id = row["doc_id"]
+        results[doc_id] = results.get(doc_id, 0) + row["frequency"]
 
     return results
 
 
 def main():
     with get_connection() as conn:
-        print(fetch_idx_entries(conn, "python"))
+        print(fetch_idx_entries(conn, ["python", "sqlite", "indexes"]))
 
 
 if __name__ == "__main__":

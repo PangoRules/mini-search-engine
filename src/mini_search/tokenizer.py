@@ -17,7 +17,6 @@ def tokenize(text: str) -> list[str]:
     stop_words = set(stopwords.words("english"))
     tokens = [w for w in tokens if w not in stop_words]
 
-    print(tokens)
     return tokens
 
 
