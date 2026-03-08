@@ -6,7 +6,9 @@ from mini_search.models import Document
 
 def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
     db_path.parent.mkdir(parents=True, exist_ok=True)
-    return sqlite3.connect(db_path)
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 def create_documents_table(conn: sqlite3.Connection) -> None:
@@ -49,10 +51,15 @@ def insert_documents(conn: sqlite3.Connection, docs: list[Document]) -> None:
         print("Documents already exist in the database.")
 
 
-def fetch_all_documents(conn: sqlite3.Connection) -> list[tuple]:
+def fetch_all_documents(conn: sqlite3.Connection) -> list[Document]:
     cursor = conn.execute("""
                           SELECT id, path, title, content
                           FROM documents
                           ORDER BY id
                           """)
-    return cursor.fetchall()
+    rawDocs = cursor.fetchall()
+
+    def mapRawResult(rawDoc):
+        return Document(rawDoc["path"], rawDoc["title"], rawDoc["content"], rawDoc["id"])
+
+    return list(map(mapRawResult, rawDocs))

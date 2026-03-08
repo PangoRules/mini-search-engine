@@ -63,7 +63,7 @@ A search engine built from scratch as a Python learning journey.
 - Dataclasses or simple classes for document/token models
 
 **What to build**
-- [ ] `tokenizer.py` — lowercase, remove punctuation, split into tokens, remove stopwords, optional stemming
+- [x] `tokenizer.py` — lowercase, remove punctuation, split into tokens, remove stopwords, optional stemming
 - [ ] Inverted index builder — maps `word -> [doc_ids]`
 - [ ] Search function — takes a query, returns matching documents
 - [ ] Store index in SQLite or in-memory dict
