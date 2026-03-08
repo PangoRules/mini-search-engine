@@ -1,6 +1,7 @@
 from collections import defaultdict
 from mini_search.models import Document
-from mini_search.storage import fetch_all_documents, get_connection
+from mini_search.storage.connection import get_connection
+from mini_search.storage.documents import fetch_all_documents
 from mini_search.tokenizer import tokenize
 
 

@@ -1,6 +1,7 @@
 from mini_search.config import SAMPLE_DOCS_DIR
 from mini_search.models import Document
-from mini_search.storage import insert_documents, get_connection
+from mini_search.storage.connection import get_connection
+from mini_search.storage.documents import insert_documents
 
 
 def get_files_found() -> list[Document]:
