@@ -1,6 +1,7 @@
 black==26.3.0
 click==8.3.1
 iniconfig==2.3.0
+-e git+ssh://git@github.com/PangoRules/mini-search-engine.git@72bca104a8c79c4754db19913bdc5b8741439062#egg=mini_search_engine
 mypy_extensions==1.1.0
 packaging==26.0
 pathspec==1.0.4
@@ -10,3 +11,4 @@ Pygments==2.19.2
 pytest==9.0.2
 pytokens==0.4.1
 ruff==0.15.5
+setuptools==82.0.0
