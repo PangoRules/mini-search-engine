@@ -67,8 +67,8 @@ A search engine built from scratch as a Python learning journey.
 - [x] Inverted index builder — maps `word -> [doc_ids]`
 - [x] Search function — takes a query, returns matching documents
 - [x] Store index in SQLite or in-memory dict
-- [ ] Basic ranking by term frequency
-- [ ] `clear_documents_table` and `clear_document_tokens_table` utility functions
+- [x] Basic ranking by term frequency
+- [x] `clear_documents_table` and `clear_document_tokens_table` utility functions
 
 **Mental model**
 
@@ -88,7 +88,7 @@ hide  -> [3]
 ```
 
 **Success checkpoint**
-- [ ] Type `cats chase` and get matching documents back in a sensible order
+- [X] Type `cats chase` and get matching documents back in a sensible order
 
 ---
 

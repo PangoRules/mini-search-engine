@@ -15,6 +15,14 @@ def create_documents_table(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def clear_documents_table(conn: sqlite3.Connection) -> None:
+    conn.executescript("""
+        DELETE FROM documents;
+        DELETE FROM sqlite_sequence WHERE name='documents';
+     """)
+    conn.commit()
+
+
 def insert_document(conn: sqlite3.Connection, doc: Document) -> None:
     conn.execute(
         """

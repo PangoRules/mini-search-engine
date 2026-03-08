@@ -15,6 +15,13 @@ def create_document_tokens_table(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def clear_documents_tokens_table(conn: sqlite3.Connection) -> None:
+    conn.executescript("""
+        DELETE FROM document_tokens;
+     """)
+    conn.commit()
+
+
 def insert_idx_entries(
     conn: sqlite3.Connection, tokenDict: dict[str, dict[int, int]]
 ) -> None:
