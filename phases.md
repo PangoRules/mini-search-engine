@@ -63,11 +63,12 @@ A search engine built from scratch as a Python learning journey.
 - Dataclasses or simple classes for document/token models
 
 **What to build**
-- [ ] `tokenizer.py` — lowercase, remove punctuation, split into tokens, remove stopwords, optional stemming
-- [ ] Inverted index builder — maps `word -> [doc_ids]`
-- [ ] Search function — takes a query, returns matching documents
-- [ ] Store index in SQLite or in-memory dict
-- [ ] Basic ranking by term frequency
+- [x] `tokenizer.py` — lowercase, remove punctuation, split into tokens, remove stopwords, optional stemming
+- [x] Inverted index builder — maps `word -> [doc_ids]`
+- [x] Search function — takes a query, returns matching documents
+- [x] Store index in SQLite or in-memory dict
+- [x] Basic ranking by term frequency
+- [x] `clear_documents_table` and `clear_document_tokens_table` utility functions
 
 **Mental model**
 
@@ -87,7 +88,7 @@ hide  -> [3]
 ```
 
 **Success checkpoint**
-- [ ] Type `cats chase` and get matching documents back in a sensible order
+- [X] Type `cats chase` and get matching documents back in a sensible order
 
 ---
 

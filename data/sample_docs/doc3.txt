@@ -1,1 +1,1 @@
-A search engine needs documents, indexes, and ranking.
+A search engine needs documents, indexes, and ranking. Good ranking makes a search engine useful. A search engine without ranking returns documents in random order. Python and data are essential for building a search engine.

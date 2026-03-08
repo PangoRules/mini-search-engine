@@ -1,1 +1,1 @@
-SQLite stores data in a single local file.
+SQLite stores data in a single local file. SQLite is great for local data storage. Developers love SQLite because it stores data without a server. Data is the core of every application.

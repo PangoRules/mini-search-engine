@@ -10,7 +10,10 @@ A search engine built from scratch in Python — no frameworks, no magic. Just P
 
 - Loads `.txt` documents from a local `data/` folder
 - Stores them in a SQLite database
-- Deduplicates on file path — safe to run multiple times
+- Tokenizes document content (lowercase, removes punctuation and stopwords)
+- Builds an inverted index mapping tokens to documents with term frequency
+- Searches documents by query and returns results ranked by term frequency
+- Supports clearing and reinitializing the database
 
 ---
 
@@ -21,14 +24,19 @@ mini-search-engine/
 ├── data/
 │   └── sample_docs/        # Sample .txt documents
 ├── scripts/
-│   ├── setup_db.py         # Initialize the SQLite database
+│   ├── setup_db.py         # Initialize (and optionally clear) the SQLite database
 │   └── load_sample_docs.py # Load sample docs into the database
 ├── src/
 │   └── mini_search/
 │       ├── config.py       # Paths and project config
-│       ├── storage.py      # Database connection and queries
 │       ├── models.py       # Data models (Document)
-│       ├── tokenizer.py    # (coming in Phase 2)
+│       ├── tokenizer.py    # Tokenization and normalization
+│       ├── index_builder.py # Builds and persists the inverted index
+│       ├── search_docs.py  # Search function with term frequency ranking
+│       ├── storage/
+│       │   ├── connection.py       # Database connection
+│       │   ├── documents.py        # Document table queries
+│       │   └── document_tokens.py  # Inverted index table queries
 │       └── __init__.py
 ├── tests/                  # (coming in Phase 7)
 ├── phases.md               # Full build roadmap
@@ -55,27 +63,26 @@ python scripts/setup_db.py
 
 # Load sample documents
 python scripts/load_sample_docs.py
+
+# Build the inverted index
+python src/mini_search/index_builder.py
+
+# Search!
+python src/mini_search/search_docs.py
 ```
 
 ---
 
 ## Current Status
 
-**Phase 1 — Project Foundations** 
+- **Phase 1 — Project Foundations** ✅
+- **Phase 2 — Text Processing + Local Document Search** ✅
+- Phase 3 — Web Crawling _(coming next)_
 
 ```bash
 ruff check src/     # lint
 black src/          # format
 pytest tests/       # run tests
 ```
-
-### Phase 2 — Text Processing + Local Document Search
-
-**What to build**
-- [ ] `tokenizer.py` — lowercase, remove punctuation, split into tokens, remove stopwords, optional stemming
-- [ ] Inverted index builder — maps `word -> [doc_ids]`
-- [ ] Search function — takes a query, returns matching documents
-- [ ] Store index in SQLite or in-memory dict
-- [ ] Basic ranking by term frequency
 
 See [phases.md](./phases.md) for the full roadmap across all 7 phases.

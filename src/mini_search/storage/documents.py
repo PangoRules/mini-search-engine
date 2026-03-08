@@ -1,12 +1,6 @@
 import sqlite3
-from pathlib import Path
-from mini_search.config import DB_PATH
 from mini_search.models import Document
-
-
-def get_connection(db_path: Path = DB_PATH) -> sqlite3.Connection:
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    return sqlite3.connect(db_path)
+from mini_search.storage.connection import get_connection
 
 
 def create_documents_table(conn: sqlite3.Connection) -> None:
@@ -17,6 +11,14 @@ def create_documents_table(conn: sqlite3.Connection) -> None:
             title TEXT NOT NULL,
             content TEXT NOT NULL
          )
+     """)
+    conn.commit()
+
+
+def clear_documents_table(conn: sqlite3.Connection) -> None:
+    conn.executescript("""
+        DELETE FROM documents;
+        DELETE FROM sqlite_sequence WHERE name='documents';
      """)
     conn.commit()
 
@@ -49,10 +51,44 @@ def insert_documents(conn: sqlite3.Connection, docs: list[Document]) -> None:
         print("Documents already exist in the database.")
 
 
-def fetch_all_documents(conn: sqlite3.Connection) -> list[tuple]:
+def fetch_all_documents(conn: sqlite3.Connection) -> list[Document]:
     cursor = conn.execute("""
                           SELECT id, path, title, content
                           FROM documents
                           ORDER BY id
                           """)
-    return cursor.fetchall()
+    rawDocs = cursor.fetchall()
+
+    return list(map(mapRawResult, rawDocs))
+
+
+def fetch_documents_by_id(
+    conn: sqlite3.Connection, docIds: list[int]
+) -> list[Document]:
+    placeholder = ", ".join("?" for _ in docIds)
+
+    cursor = conn.execute(
+        f"""
+        SELECT id, path, title, content
+        FROM documents
+        WHERE id IN ({placeholder})
+    """,
+        docIds,
+    )
+
+    rawDocs = cursor.fetchall()
+
+    return list(map(mapRawResult, rawDocs))
+
+
+def mapRawResult(rawDoc):
+    return Document(rawDoc["path"], rawDoc["title"], rawDoc["content"], rawDoc["id"])
+
+
+def main():
+    with get_connection() as conn:
+        print(fetch_documents_by_id(conn, [1, 2]))
+
+
+if __name__ == "__main__":
+    main()
