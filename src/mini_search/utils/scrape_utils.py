@@ -1,10 +1,28 @@
+from typing import TypedDict
 from bs4 import BeautifulSoup
 from requests import Response
 from mini_search.tokenizer import tokenize
 from mini_search.utils.url_utils import normalize_url
 
 
-def scrape_page(response: Response, url: str) -> dict:
+class ScrapedPageDto(TypedDict):
+    url: str
+    title: list[str] | None
+    meta_description: str | None
+    headings: dict
+    paragraphs: list[list[str]]
+    links: list[str]
+    images: list[list[str]]
+    lists: list[list[str]]
+    tables: list[ParsedTables]
+
+
+class ParsedTables(TypedDict):
+    headersTag: list[str]
+    tableDatatag: list[str]
+
+
+def scrape_page(response: Response, url: str) -> ScrapedPageDto:
     soup = BeautifulSoup(response.text, "html.parser")
 
     # remove noise tags
@@ -12,7 +30,7 @@ def scrape_page(response: Response, url: str) -> dict:
         tag.decompose()
 
     # object to return
-    result = {
+    result: ScrapedPageDto = {
         "url": url,
         "title": tokenize(clean_text(soup.title.get_text())) if soup.title else None,
         "meta_description": None,
@@ -39,7 +57,7 @@ def parse_headers(soup: BeautifulSoup) -> dict:
     return headers
 
 
-def parse_paragraphs(soup: BeautifulSoup) -> list:
+def parse_paragraphs(soup: BeautifulSoup) -> list[list[str]]:
     return [
         tokenize(clean_text(tag.get_text(" ", strip=True)))
         for tag in soup.find_all("p")
@@ -59,7 +77,7 @@ def parse_links(soup: BeautifulSoup, base_url: str) -> list[str]:
     return links
 
 
-def parse_images(soup: BeautifulSoup, base_url: str) -> list:
+def parse_images(soup: BeautifulSoup, base_url: str) -> list[list[str]]:
     images = []
     for img in soup.find_all("img"):
         image = {}
@@ -72,7 +90,7 @@ def parse_images(soup: BeautifulSoup, base_url: str) -> list:
     return images
 
 
-def parse_lists(soup: BeautifulSoup) -> list:
+def parse_lists(soup: BeautifulSoup) -> list[list[str]]:
     listGroups = soup.find_all(["ul", "ol"])
     results = []
     for groupedList in listGroups:
@@ -85,7 +103,7 @@ def parse_lists(soup: BeautifulSoup) -> list:
     return results
 
 
-def parse_tables(soup: BeautifulSoup) -> list:
+def parse_tables(soup: BeautifulSoup) -> list[ParsedTables]:
     listTables = soup.find_all("table")
     results = []
     for table in listTables:
