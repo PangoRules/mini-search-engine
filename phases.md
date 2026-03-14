@@ -113,14 +113,18 @@ hide  -> [3]
 - Queues (`collections.deque`)
 
 **What to build**
-- [ ] Crawler that starts from seed URLs
-- [ ] Fetches pages and extracts text + links
-- [ ] Normalizes URLs to avoid duplicates
-- [ ] Stores discovered pages in the database
-- [ ] Respects crawl constraints: approved domains only, max depth 2-3, max 100-500 pages, HTML only
+- [X] Crawler that starts from seed URLs
+- [X] Fetches pages and extracts text + links
+- [X] Normalizes URLs to avoid duplicates
+- [x] Stores discovered pages in the database
+- [x] Respects crawl constraints: approved domains only, max depth 2-3, max 100-500 pages, HTML only
+- [X] robots.txt awareness
+- [x] Approved domains only
+- [X] URLs queued multiple times (in-queue deduplication)
+- [x] main() arguments look swapped
 
 **Success checkpoint**
-- [ ] Give it 2-3 seed URLs and it stores a small crawl set in the database
+- [x] Give it 2-3 seed URLs and it stores a small crawl set in the database
 
 ---
 
@@ -223,6 +227,7 @@ hide  -> [3]
 **What to build**
 - [ ] Tests: tokenizer, URL normalization, inverted index, scoring, pagination
 - [ ] Structured logs with crawl stats and performance notes
+- [ ] Per-domain `max_pages` limit in crawler (currently global limit causes uneven crawling across domains)
 - [ ] Docker setup so anyone can run it
 - [ ] Architecture diagram
 - [ ] Clean README with setup instructions, known limitations, future improvements

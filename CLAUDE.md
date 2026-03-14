@@ -35,3 +35,4 @@ mini-search-engine/
 - No pyproject.toml or setup.py — modules cannot be imported cross-file yet without path manipulation
 - User runs files directly with `python <path-to-file>`
 - Tutor style: guide with questions and hints, not direct code answers
+- ALWAYS re-read files when the user references them or asks about their current state — never assume the file hasn't changed
