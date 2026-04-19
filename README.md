@@ -8,10 +8,12 @@ A search engine built from scratch in Python — no frameworks, no magic. Just P
 
 ## What it does (so far)
 
-- Loads `.txt` documents from a local `data/` folder
-- Stores them in a SQLite database
+- Crawls web pages starting from seed URLs
+- Respects `robots.txt`, approved domains, crawl depth, and page limits
+- Stores crawled pages (text, headings, links, images) in a SQLite database
 - Tokenizes document content (lowercase, removes punctuation and stopwords)
 - Builds an inverted index mapping tokens to documents with term frequency
+- Indexes crawled pages into a searchable inverted index (`scraped_page_tokens`)
 - Searches documents by query and returns results ranked by term frequency
 - Supports clearing and reinitializing the database
 
@@ -33,10 +35,16 @@ mini-search-engine/
 │       ├── tokenizer.py    # Tokenization and normalization
 │       ├── index_builder.py # Builds and persists the inverted index
 │       ├── search_docs.py  # Search function with term frequency ranking
+│       ├── crawler.py      # Web crawler (BFS, robots.txt, domain filtering)
+│       ├── utils/
+│       │   ├── scrape_utils.py     # HTML scraping and ScrapedPageDto
+│       │   └── url_utils.py        # URL normalization
 │       ├── storage/
-│       │   ├── connection.py       # Database connection
-│       │   ├── documents.py        # Document table queries
-│       │   └── document_tokens.py  # Inverted index table queries
+│       │   ├── connection.py           # Database connection
+│       │   ├── documents.py            # Document table queries
+│       │   ├── document_tokens.py      # Inverted index table queries (local docs)
+│       │   ├── scraped_pages.py        # Scraped pages table queries
+│       │   └── scraped_page_tokens.py  # Web index table + pipeline (Phase 4)
 │       └── __init__.py
 ├── tests/                  # (coming in Phase 7)
 ├── phases.md               # Full build roadmap
@@ -77,7 +85,9 @@ python src/mini_search/search_docs.py
 
 - **Phase 1 — Project Foundations** ✅
 - **Phase 2 — Text Processing + Local Document Search** ✅
-- Phase 3 — Web Crawling _(coming next)_
+- **Phase 3 — Web Crawling** ✅
+- **Phase 4 — Indexing Crawled Pages** ✅
+- Phase 5 — Ranking _(up next)_
 
 ```bash
 ruff check src/     # lint

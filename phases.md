@@ -145,12 +145,12 @@ hide  -> [3]
 - Pipeline pattern (functions chained together)
 
 **What to build**
-- [ ] Pipeline: crawled page -> extract text -> tokenize -> count terms -> store in index
-- [ ] Store per document: URL, title, body text
-- [ ] Index script that processes all crawled pages
+- [x] Pipeline: crawled page -> extract text -> tokenize -> count terms -> store in index
+- [x] Store per document: URL, title, body text
+- [x] Index script that processes all crawled pages
 
 **Success checkpoint**
-- [ ] Run a script and see: crawl complete, index built, N documents indexed, M unique terms stored
+- [x] Run a script and see: crawl complete, index built, N documents indexed, M unique terms stored
 
 ---
 
