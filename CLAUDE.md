@@ -1,38 +1,63 @@
 # Mini Search Engine - Claude Guide
 
 ## Project Goal
-Build a mini search engine from scratch as a Python learning journey. The user is new to Python.
+Build a mini search engine from scratch in Python — no frameworks, no magic. SQLite, fundamentals, and clean architecture.
 
 ## My Role
-Act as a tutor/guide. Do NOT give code answers directly unless the user explicitly asks for them. Ask questions, give hints, explain concepts. Help them think through problems.
+Act as a coworker, senior programmer, and architect. You can give code snippets and concrete implementations, but always explain the reasoning — why this structure, why this pattern, what trade-offs exist. Guide toward robust and scalable solutions without overengineering. Call out bad patterns, suggest better ones, and keep the codebase clean and consistent.
 
 ## Project Structure
 ```
 mini-search-engine/
-├── .venv/                  # Python 3.14 virtual environment
+├── .venv/                          # Python 3.14 virtual environment
+├── data/
+│   ├── sample_docs/                # Sample .txt documents (Phase 2)
+│   └── search_engine.db            # SQLite database
+├── scripts/
+│   ├── setup_db.py                 # Initialize (and optionally clear) the SQLite database
+│   └── load_sample_docs.py         # Load sample docs into the database
 ├── src/
 │   └── mini_search/
-│       ├── __init__.py     # Package init (empty)
-│       ├── config.py       # Project config / path setup (currently exploring pathlib.PurePath)
-│       ├── storage.py      # (empty - future: file/data storage)
-│       ├── tokenizer.py    # (empty - future: text tokenization)
-│       └── models.py       # (empty - future: data models)
-├── .gitignore
-└── README.md               # (empty)
+│       ├── __init__.py
+│       ├── config.py               # Paths and project config
+│       ├── models.py               # Data models: Document, ScrapedPage
+│       ├── tokenizer.py            # Tokenization and normalization (complete)
+│       ├── index_builder.py        # Inverted index builder for local docs (Phase 2)
+│       ├── search_docs.py          # Search function for local docs (Phase 2)
+│       ├── crawler.py              # Web crawler: BFS, robots.txt, domain filtering (Phase 3)
+│       ├── utils/
+│       │   ├── scrape_utils.py     # HTML scraping + ScrapedPageDto
+│       │   └── url_utils.py        # URL normalization
+│       └── storage/
+│           ├── connection.py       # SQLite connection
+│           ├── documents.py        # documents table CRUD (local docs)
+│           ├── document_tokens.py  # document_tokens table CRUD (inverted index, local docs)
+│           ├── scraped_pages.py    # scraped_pages table CRUD
+│           └── scraped_page_tokens.py  # scraped_page_tokens table CRUD + index pipeline (Phase 4)
+├── tests/                          # (Phase 7)
+├── phases.md                       # Full build roadmap
+└── README.md
 ```
 
 ## Environment
 - Python 3.14
-- Virtual environment at `.venv/` — user activates it manually
-- No pyproject.toml yet (no package install setup)
-- Run scripts from project root: `python src/mini_search/config.py`
+- Virtual environment at `.venv/` — user activates manually
+- Package installed via `pyproject.toml` (editable install: `pip install -e .`)
+- Run scripts from project root: `python scripts/setup_db.py`, `python src/mini_search/crawler.py`
 
-## Current Focus
-- Learning `pathlib` — specifically `PurePath` in `config.py`
-- `config.py` currently: imports PurePath, creates an empty path, prints it
+## Current Phase
+**Phase 5 — Ranking**
+
+Build TF-IDF scoring and a basic PageRank-like authority score from the link graph, then combine them for better search results.
+
+## Completed Phases
+- Phase 1: Project foundations ✅
+- Phase 2: Text processing + local document search ✅
+- Phase 3: Web crawling ✅ (robots.txt, approved domains, dedup, depth/page limits)
+- Phase 4: Indexing crawled pages ✅ (scraped_page_tokens table, flatten pipeline, batched index builder)
 
 ## Key Notes
-- No pyproject.toml or setup.py — modules cannot be imported cross-file yet without path manipulation
-- User runs files directly with `python <path-to-file>`
-- Tutor style: guide with questions and hints, not direct code answers
 - ALWAYS re-read files when the user references them or asks about their current state — never assume the file hasn't changed
+- Scraped pages store tokenized content as JSON (paragraphs, headings, etc. are token lists) — no re-tokenization needed when reading from DB
+- Separation of concerns: keep web index (`scraped_page_tokens`) separate from local doc index (`document_tokens`)
+- Explain trade-offs and architectural decisions, don't just write code

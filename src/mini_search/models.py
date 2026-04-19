@@ -1,3 +1,6 @@
+import json
+
+
 class Document:
     def __init__(self, path: str, title: str, content: str, id: int | None = None):
         self.id = id
@@ -25,14 +28,14 @@ class ScrapedPage:
     ):
         self.id = id
         self.url = url
-        self.title = title
+        self.title = json.loads(title) if title else None
         self.meta_description = meta_description
-        self.headings = headings
-        self.paragraphs = paragraphs
-        self.links = links
-        self.images = images
-        self.lists = lists
-        self.tables = tables
+        self.headings = json.loads(headings)
+        self.paragraphs = json.loads(paragraphs)
+        self.links = json.loads(links)
+        self.images = json.loads(images)
+        self.lists = json.loads(lists)
+        self.tables = json.loads(tables)
 
     def __repr__(self):
         return f"{self.id}, {self.url}, {self.title}, {self.meta_description}, {self.headings}, {self.paragraphs}, {self.links}, {self.images}, {self.lists}, {self.tables}"

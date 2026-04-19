@@ -6,6 +6,7 @@ from mini_search.utils.url_utils import normalize_url
 
 
 class ScrapedPageDto(TypedDict):
+    id: int | None
     url: str
     title: list[str] | None
     meta_description: str | None
@@ -31,6 +32,7 @@ def scrape_page(response: Response, url: str) -> ScrapedPageDto:
 
     # object to return
     result: ScrapedPageDto = {
+        "id": None,
         "url": url,
         "title": tokenize(clean_text(soup.title.get_text())) if soup.title else None,
         "meta_description": None,

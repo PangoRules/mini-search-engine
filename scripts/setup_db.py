@@ -9,12 +9,17 @@ from mini_search.storage.scraped_pages import (
     clear_scraped_pages_table,
     create_scraped_pages_table,
 )
+from mini_search.storage.scraped_page_tokens import (
+    clear_scraped_page_tokens_table,
+    create_scraped_page_tokens_table,
+)
 
 
 def clean_up_documents(conn: Connection) -> None:
     clear_documents_table(conn)
     clear_documents_tokens_table(conn)
     clear_scraped_pages_table(conn)
+    clear_scraped_page_tokens_table(conn)
 
 
 def main() -> None:
@@ -26,6 +31,7 @@ def main() -> None:
             create_documents_table(conn)
             create_document_tokens_table(conn)
             create_scraped_pages_table(conn)
+            create_scraped_page_tokens_table(conn)
             print("Database initialized.")
         except:
             print("Database initialization unsucessful.")

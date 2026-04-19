@@ -1,6 +1,7 @@
 import sqlite3
 import json
 
+from mini_search.models import ScrapedPage
 from mini_search.utils.scrape_utils import ScrapedPageDto
 
 
@@ -50,3 +51,33 @@ def insert_scraped_page(conn: sqlite3.Connection, dto: ScrapedPageDto) -> None:
         ),
     )
     conn.commit()
+
+
+def retrieve_scraped_pages(
+    conn: sqlite3.Connection, skip: int = 0, take: int = 10
+) -> list[ScrapedPage]:
+    scrapedPages = conn.execute(
+        """
+                SELECT 
+                    id, url, title, meta_description, headings, paragraphs, links, images, lists, tables
+                FROM scraped_pages LIMIT ? OFFSET ?
+            """,
+        (take, skip),
+    )
+
+    return list(map(map_raw_scraped_to_dto, scrapedPages))
+
+
+def map_raw_scraped_to_dto(raw_doc):
+    return ScrapedPage(
+        raw_doc["url"],
+        raw_doc["title"],
+        raw_doc["meta_description"],
+        raw_doc["headings"],
+        raw_doc["paragraphs"],
+        raw_doc["links"],
+        raw_doc["images"],
+        raw_doc["lists"],
+        raw_doc["tables"],
+        raw_doc["id"],
+    )
