@@ -14,6 +14,9 @@ A search engine built from scratch in Python — no frameworks, no magic. Just P
 - Tokenizes document content (lowercase, removes punctuation and stopwords)
 - Builds an inverted index mapping tokens to documents with term frequency
 - Indexes crawled pages into a searchable inverted index (`scraped_page_tokens`)
+- Ranks crawled pages using TF-IDF scoring
+- Computes PageRank authority scores from the link graph
+- Combines text relevance + authority into a single ranked result set
 - Searches documents by query and returns results ranked by term frequency
 - Supports clearing and reinitializing the database
 
@@ -39,6 +42,8 @@ mini-search-engine/
 │       ├── utils/
 │       │   ├── scrape_utils.py     # HTML scraping and ScrapedPageDto
 │       │   └── url_utils.py        # URL normalization
+│       ├── pagerank.py             # PageRank authority scorer
+│       ├── search_scraped_pages.py # TF-IDF + combined ranking for crawled pages
 │       ├── storage/
 │       │   ├── connection.py           # Database connection
 │       │   ├── documents.py            # Document table queries
@@ -87,7 +92,8 @@ python src/mini_search/search_docs.py
 - **Phase 2 — Text Processing + Local Document Search** ✅
 - **Phase 3 — Web Crawling** ✅
 - **Phase 4 — Indexing Crawled Pages** ✅
-- Phase 5 — Ranking _(up next)_
+- **Phase 5 — Ranking** ✅
+- Phase 6 — Search API + Pagination _(up next)_
 
 ```bash
 ruff check src/     # lint

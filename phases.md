@@ -171,12 +171,12 @@ hide  -> [3]
 - Graph basics (dicts of dicts or `networkx`)
 
 **What to build**
-- [ ] TF-IDF scorer
-- [ ] Basic PageRank-like authority score from link graph
-- [ ] Combined ranking: text relevance + authority score
+- [x] TF-IDF scorer
+- [x] Basic PageRank-like authority score from link graph
+- [x] Combined ranking: text relevance + authority score
 
 **Success checkpoint**
-- [ ] Search results feel noticeably better than random matching order
+- [x] Search results feel noticeably better than random matching order
 
 ---
 
