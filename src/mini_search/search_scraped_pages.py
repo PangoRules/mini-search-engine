@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from mini_search.tokenizer import tokenize
 from mini_search.storage.connection import get_connection
 
+# Import PageRank functionality
+from mini_search.pagerank import compute_pagerank
+
 @dataclass
 class SearchResult:
     page_id: int
@@ -122,6 +125,35 @@ def search_scraped_pages(query: str) -> list[SearchResult]:
             if pid in metadata
         ]
         return sorted(results, key=lambda r: r.score, reverse=True)
+
+def search_with_authority(query: str, alpha: float = 0.7) -> list[SearchResult]:
+    """Search scraped pages using TF-IDF scoring combined with PageRank authority."""
+    tfidf_results = search_scraped_pages(query)
+    if not tfidf_results:
+        return []
+    
+    with get_connection() as conn:
+        pagerank_scores = compute_pagerank(conn)
+
+    tfidf_map = {r.page_id: r.score for r in tfidf_results}
+    
+    tfidf_max = max(tfidf_map.values())
+    tfidf_norm = {pid: s / tfidf_max for pid, s in tfidf_map.items()}
+    
+    matched_pr = {pid: pagerank_scores.get(pid, 0.0) for pid in tfidf_map}
+    pr_max = max(matched_pr.values()) if any(v > 0 for v in matched_pr.values()) else 1.0
+    pr_norm = {pid: s / pr_max for pid, s in matched_pr.items()}
+    
+    results = [
+        SearchResult(
+            page_id=pid,
+            url=next(r.url for r in tfidf_results if r.page_id == pid),
+            title=next(r.title for r in tfidf_results if r.page_id == pid),
+            score=alpha * tfidf_norm[pid] + (1 - alpha) * pr_norm[pid],
+        )
+        for pid in tfidf_map
+    ]
+    return sorted(results, key=lambda r: r.score, reverse=True)
 
 def main():
     """Test the scorer."""
