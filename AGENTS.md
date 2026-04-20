@@ -21,6 +21,12 @@
     *   The pipeline requires extracting tokens **from existing JSON fields** within the `scraped_pages` table.
     *   The raw tokenization step is **already done** when scraping; do not re-tokenize.
     *   The process involves flattening these tokens and performing term frequency counting before storing results in `scraped_page_tokens`.
+*   **Search Implementation Details:**
+    *   TF-IDF scoring implemented in `search_scraped_pages.py` with proper SQL queries for fetching token data and page metadata.
+    *   Uses `mini_search.tokenizer.tokenize()` for consistent tokenization across the application.
+    *   Database connections managed via `mini_search.storage.connection.get_connection()` context manager.
+    *   Page titles in `scraped_pages` table are stored as JSON arrays and require `json.loads()` processing.
+    *   TF-IDF computation includes proper document frequency calculation from query results.
 *   **Local Document Indexing:** After loading document samples, indexing is performed by calling `index_builder.py`.
 *   **Search Interface:** Search queries are handled by `search_docs.py`.
 

@@ -25,6 +25,8 @@ mini-search-engine/
 │       ├── index_builder.py        # Inverted index builder for local docs (Phase 2)
 │       ├── search_docs.py          # Search function for local docs (Phase 2)
 │       ├── crawler.py              # Web crawler: BFS, robots.txt, domain filtering (Phase 3)
+│       ├── pagerank.py             # PageRank authority scorer (Phase 5)
+│       ├── search_scraped_pages.py # TF-IDF + combined search for crawled pages (Phase 5)
 │       ├── utils/
 │       │   ├── scrape_utils.py     # HTML scraping + ScrapedPageDto
 │       │   └── url_utils.py        # URL normalization
@@ -46,15 +48,16 @@ mini-search-engine/
 - Run scripts from project root: `python scripts/setup_db.py`, `python src/mini_search/crawler.py`
 
 ## Current Phase
-**Phase 5 — Ranking**
+**Phase 6 — Search API + Pagination**
 
-Build TF-IDF scoring and a basic PageRank-like authority score from the link graph, then combine them for better search results.
+Expose the search engine via a FastAPI REST endpoint with pagination, ranked results, and basic rate limiting.
 
 ## Completed Phases
 - Phase 1: Project foundations ✅
 - Phase 2: Text processing + local document search ✅
 - Phase 3: Web crawling ✅ (robots.txt, approved domains, dedup, depth/page limits)
 - Phase 4: Indexing crawled pages ✅ (scraped_page_tokens table, flatten pipeline, batched index builder)
+- Phase 5: Ranking ✅ (TF-IDF scorer, PageRank authority score, combined search_with_authority)
 
 ## Key Notes
 - ALWAYS re-read files when the user references them or asks about their current state — never assume the file hasn't changed

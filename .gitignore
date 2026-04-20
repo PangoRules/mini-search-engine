@@ -9,3 +9,5 @@
 
 # database files
 *.db
+.claude/
+.codex
