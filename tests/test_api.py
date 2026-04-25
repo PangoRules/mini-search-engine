@@ -72,5 +72,5 @@ def test_search_large_page_size(client):
     response = client.get("/search", params={"q": "test", "page_size": 100})
     assert response.status_code == 200
     data = response.json()
-    # Should cap at 50
+    # Out-of-range page_size resets to default (10)
     assert data["page_size"] == 10  # Default value
