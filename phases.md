@@ -198,13 +198,13 @@ hide  -> [3]
 - In-memory rate limiting
 
 **What to build**
-- [ ] `GET /search?q=python&page=1&page_size=10`
-- [ ] Response includes: query, total results, total pages, current page, results list
-- [ ] Each result includes: title, URL, snippet, score
-- [ ] Basic rate limiting
+- [x] `GET /search?q=python&page=1&page_size=10`
+- [x] Response includes: query, total results, total pages, current page, results list
+- [x] Each result includes: title, URL, snippet, score
+- [x] Basic rate limiting
 
 **Success checkpoint**
-- [ ] Search via browser or Swagger UI and get paginated ranked results
+- [x] Search via browser or Swagger UI and get paginated ranked results
 
 ---
 
