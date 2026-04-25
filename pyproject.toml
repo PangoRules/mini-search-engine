@@ -12,6 +12,10 @@ dependencies = [
     "black",
     "ruff",
     "pytest",
+    "fastapi",
+    "uvicorn",
+    "httpx",
+    "starlette",
 ]
 
 [tool.setuptools.packages.find]

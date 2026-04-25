@@ -68,6 +68,40 @@ def retrieve_scraped_pages(
     return list(map(map_raw_scraped_to_dto, scrapedPages))
 
 
+def fetch_paragraphs_by_ids(conn: sqlite3.Connection, page_ids: list[int]) -> dict[int, list[list[str]]]:
+    """Fetch paragraphs for given page IDs.
+    
+    Args:
+        conn: Database connection
+        page_ids: List of page IDs to fetch
+        
+    Returns:
+        Dict mapping page_id to list of paragraph tokens
+    """
+    if not page_ids:
+        return {}
+    
+    # Create placeholders for the IN clause
+    placeholders = ','.join('?' * len(page_ids))
+    
+    query = f"""
+    SELECT id, paragraphs FROM scraped_pages WHERE id IN ({placeholders})
+    """
+    
+    cursor = conn.cursor()
+    cursor.execute(query, page_ids)
+    rows = cursor.fetchall()
+    
+    result = {}
+    for row in rows:
+        page_id = row["id"]
+        # Parse the JSON paragraphs field
+        paragraphs = json.loads(row["paragraphs"]) if row["paragraphs"] else []
+        result[page_id] = paragraphs
+    
+    return result
+
+
 def map_raw_scraped_to_dto(raw_doc):
     return ScrapedPage(
         raw_doc["url"],
