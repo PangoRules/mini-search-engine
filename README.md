@@ -93,12 +93,30 @@ python src/mini_search/search_docs.py
 - **Phase 3 — Web Crawling** ✅
 - **Phase 4 — Indexing Crawled Pages** ✅
 - **Phase 5 — Ranking** ✅
-- Phase 6 — Search API + Pagination _(up next)_
+- **Phase 6 — Search API + Pagination** ✅
 
 ```bash
 ruff check src/     # lint
 black src/          # format
 pytest tests/       # run tests
+```
+
+## API Usage
+
+To start the API server:
+
+```bash
+uvicorn src.mini_search.api:app --reload
+```
+
+Example search request:
+```bash
+curl "http://localhost:8000/search?q=python&page=1&page_size=5"
+```
+
+The endpoint supports pagination with:
+- `page`: Current page number (default: 1)
+- `page_size`: Number of results per page (default: 10, max: 50)
 ```
 
 See [phases.md](./phases.md) for the full roadmap across all 7 phases.
