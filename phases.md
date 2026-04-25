@@ -225,13 +225,13 @@ hide  -> [3]
 - Type hints throughout
 
 **What to build**
-- [ ] Tests: tokenizer, URL normalization, inverted index, scoring, pagination
-- [ ] Structured logs with crawl stats and performance notes
-- [ ] Per-domain `max_pages` limit in crawler (currently global limit causes uneven crawling across domains)
-- [ ] Docker setup so anyone can run it
-- [ ] Architecture diagram
-- [ ] Clean README with setup instructions, known limitations, future improvements
-- [ ] Sample data/seed instructions
+- [x] Tests: tokenizer, URL normalization, inverted index, scoring, pagination
+- [x] Structured logs with crawl stats and performance notes
+- [x] Per-domain `max_pages` limit in crawler (currently global limit causes uneven crawling across domains)
+- [x] Docker setup so anyone can run it
+- [x] Architecture diagram
+- [x] Clean README with setup instructions, known limitations, future improvements
+- [x] Sample data/seed instructions
 
 **Success checkpoint**
-- [ ] Someone can clone the repo, run it, and understand what it does without asking you anything
+- [x] Someone can clone the repo, run it, and understand what it does without asking you anything
