@@ -1,19 +1,14 @@
-# Dockerfile
 FROM python:3.14-slim
 
 WORKDIR /app
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+COPY pyproject.toml .
+COPY src/ ./src/
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir .
 
-# Copy application code
 COPY . .
 
-# Expose the port API runs on
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "src.mini_search.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "mini_search.api:app", "--host", "0.0.0.0", "--port", "8000"]
