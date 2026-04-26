@@ -80,6 +80,11 @@ python scripts/load_sample_docs.py
 # Build the inverted index
 python src/mini_search/index_builder.py
 
+# To use the web search API, first crawl and index pages:
+# Crawl web pages and build the web search index (one-time setup, takes a few minutes)
+python src/mini_search/crawler.py
+python src/mini_search/storage/scraped_page_tokens.py
+
 # Search!
 python src/mini_search/search_docs.py
 ```
@@ -142,16 +147,25 @@ The endpoint supports pagination with:
 
 ## Docker Setup
 
-To run the search engine using Docker:
+The Docker container serves the search API but requires a populated database first.
+Run the crawler and indexer once before starting Docker:
 
 ```bash
-# Build the image
-docker build -t mini-search-engine .
+# One-time: populate the database
+source .venv/bin/activate
+python src/mini_search/crawler.py
+python src/mini_search/storage/scraped_page_tokens.py
 
-# Run with default settings
-docker run -p 8000:8000 mini-search-engine
+# Then start the container
+docker compose up --build
 ```
 
-The application will be accessible at `http://localhost:8000` and will include a web API at `/search`.
+The `./data` directory is mounted into the container, so the crawled data is available immediately at
+`http://localhost:8000`.
+
+Example search:
+```bash
+curl "http://localhost:8000/search?q=book&page=1&page_size=5"
+```
 
 See [phases.md](./phases.md) for the full roadmap across all 7 phases.
