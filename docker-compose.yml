@@ -9,3 +9,4 @@ services:
       - ./data:/app/data
     environment:
       - PYTHONPATH=/app
+      - DATA_DIR=/app/data
