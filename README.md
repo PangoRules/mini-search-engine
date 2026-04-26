@@ -94,12 +94,34 @@ python src/mini_search/search_docs.py
 - **Phase 4 — Indexing Crawled Pages** ✅
 - **Phase 5 — Ranking** ✅
 - **Phase 6 — Search API + Pagination** ✅
+- **Phase 7 — Polish for Resume Quality** ✅
 
-```bash
-ruff check src/     # lint
-black src/          # format
-pytest tests/       # run tests
-```
+## Known Limitations
+
+This search engine has several limitations:
+
+- Search results are limited to pages that have been crawled
+- The crawler is basic and doesn't handle JavaScript execution
+- TF-IDF scoring doesn't account for document length normalization
+- Results are only sorted by relevance scoring
+- Only supports one domain per crawl
+
+## Future Improvements
+
+- Implement advanced crawling features
+- Add support for JavaScript rendering
+- Integrate with Elasticsearch or other search engines
+- Extend to include local file storage search
+- Add user authentication and access control
+- Add real-time search indexing
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
 ## API Usage
 
@@ -117,6 +139,19 @@ curl "http://localhost:8000/search?q=python&page=1&page_size=5"
 The endpoint supports pagination with:
 - `page`: Current page number (default: 1)
 - `page_size`: Number of results per page (default: 10, max: 50)
+
+## Docker Setup
+
+To run the search engine using Docker:
+
+```bash
+# Build the image
+docker build -t mini-search-engine .
+
+# Run with default settings
+docker run -p 8000:8000 mini-search-engine
 ```
+
+The application will be accessible at `http://localhost:8000` and will include a web API at `/search`.
 
 See [phases.md](./phases.md) for the full roadmap across all 7 phases.

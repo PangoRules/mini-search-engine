@@ -17,6 +17,8 @@ def crawl(max_depth: int, max_pages: int, domains: list[str]) -> None:
     queued = set(domains)
     robotPhoneBook: dict[str, robotparser.RobotFileParser] = {}
 
+    print(f"Starting crawl with max depth {max_depth}, max pages {max_pages}")
+    
     while queue and len(visited) < max_pages:
         url, depth = queue.popleft()
         if url in visited:
@@ -50,23 +52,32 @@ def crawl(max_depth: int, max_pages: int, domains: list[str]) -> None:
             if linkFound not in visited and linkFound not in queued:
                 queue.append((linkFound, depth + 1))
                 queued.add(linkFound)
+    
+    print(f"Crawl completed. Visited {len(visited)} pages.")
 
 
 def fetch_page(url: str) -> Response | None:
     try:
+        print(f"Fetching page: {url}")
         response = requests.get(url, headers={"User-Agent": "MyCrawler/1.0"})
         if response.status_code != 200:
+            print(f"Page fetch failed: {url} (status: {response.status_code})")
             return None
         if "text/html" not in response.headers.get("Content-Type", ""):
+            print(f"Page content type not HTML: {url}")
             return None
+        print(f"Page fetched successfully: {url}")
         return response
-    except RequestException:
-        print("An error has happened.")
+    except RequestException as e:
+        print(f"Error fetching page: {url} - {e}")
+        return None
 
 
 def save_page(scraped_page: ScrapedPageDto) -> None:
+    print(f"Saving page: {scraped_page['url']}")
     with get_connection() as conn:
         insert_scraped_page(conn, scraped_page)
+    print(f"Page saved successfully: {scraped_page['url']}")
 
 
 def main():

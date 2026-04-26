@@ -2,7 +2,7 @@ import threading
 import time
 from collections import defaultdict
 from typing import List, Dict, Any
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from urllib.parse import quote
@@ -54,7 +54,7 @@ class SearchResponse(BaseModel):
     results: List[SearchResult]
 
 @app.get("/search", response_model=SearchResponse)
-async def search(request: Request, q: str, page: int = 1, page_size: int = 10):
+async def search(request: Request, q: str = Query(min_length=1), page: int = 1, page_size: int = 10):
     """Search endpoint with pagination support."""
     # Rate limiting
     client_ip = request.client.host if request.client else "unknown"
